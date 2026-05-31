@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DriveBeats</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sb">
+  <div class="logo">Drive<em>Beats</em></div>
+  <div class="nav">
+    <div class="ni on" onclick="showView('home',this)">
+      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home
+    </div>
+    <div class="ni" onclick="showView('liked',this)">
+      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Liked Songs
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="lib-label">Library</div>
+  <div class="lib" id="lib"></div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+  <div class="top-bar">
+    <div class="top-left">
+      <h1 id="vtitle">All Songs</h1>
+      <div class="search-wrap">
+        <svg width="18" height="18" fill="var(--muted)" viewBox="0 0 24 24"><path d="M21 20l-4.35-4.35A7.92 7.92 0 0018 10c0-4.42-3.58-8-8-8S2 5.58 2 10s3.58 8 8 8a7.92 7.92 0 005.65-2.35L20 21l1-1zM10 16a6 6 0 110-12 6 6 0 010 12z"/></svg>
+        <input class="search" type="search" placeholder="Search songs..." oninput="setSearch(this.value)" aria-label="Search songs" />
+      </div>
+    </div>
+    <button class="rbtn" id="rbtn" onclick="loadSongs()">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      Refresh
+    </button>
+  </div>
+  <div id="content"></div>
+</main>
+
+<!-- PLAYER -->
+<div id="player">
+  <div class="pinfo">
+    <img class="pthumb" id="pimg" src="" alt="" onerror="this.style.display='none';document.getElementById('ptfb').style.display='flex'"/>
+    <div class="ptfb" id="ptfb">
+      <svg width="20" height="20" fill="var(--muted)" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
+    </div>
+    <div class="pmeta">
+      <div class="ptitle" id="ptitle">No track selected</div>
+      <div class="partist" id="partist">—</div>
+    </div>
+    <button class="hbtn" id="hbtn" onclick="toggleLike()">
+      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+  </div>
+
+  <div class="pctrl">
+    <div class="cbtns">
+      <button class="cbtn" id="shbtn" onclick="toggleShuffle()" title="Shuffle">
+        <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="cbtn" onclick="playPrev()">
+        <svg width="21" height="21" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="ppbtn" id="ppbtn" onclick="togglePlay()">
+        <svg id="ppico" width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="cbtn" onclick="playNext()">
+        <svg width="21" height="21" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+      </button>
+      <button class="cbtn on" id="rpbtn" onclick="toggleRepeat()" title="Repeat">
+        <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      </button>
+    </div>
+    <div class="prog">
+      <span class="tl" id="tcur">0:00</span>
+      <div class="bar" id="bar" onclick="seek(event)"></div>
+      <span class="tl r" id="tdur">0:00</span>
+    </div>
+  </div>
+
+  <div class="pright">
+    <div class="vwrap">
+      <button class="cbtn" onclick="toggleMute()">
+        <svg id="vico" width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      </button>
+      <input type="range" class="vslider" id="vsl" min="0" max="100" value="80" oninput="setVol(this.value)"/>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<audio id="aud"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
