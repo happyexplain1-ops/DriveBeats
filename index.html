@@ -1,102 +1,404 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DriveBeats</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="styles.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#120806">
+<title>मुक्ति धाम मुकाम | Mukti Dham Mukam — Bishnoi Bhajan Radio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#120806;
+    --bg-soft:#1D110C;
+    --panel:#241509;
+    --gold:#E2A63B;
+    --gold-deep:#C1682B;
+    --marble:#FBF8F1;
+    --ink-soft:rgba(251,248,241,0.72);
+    --line: rgba(251,248,241,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--marble);
+    font-family:'Mukta', sans-serif; line-height:1.6; overflow-x:hidden;
+  }
+  h1,h2,h3,.display{ font-family:'Yatra One','Mukta',cursive; font-weight:400; color:var(--gold); }
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.03em; }
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:900px; margin:0 auto; padding:0 22px;}
+  button{font-family:inherit;}
+
+  /* ---- TOP BAR ---- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; background:linear-gradient(180deg, rgba(18,8,6,0.9), rgba(18,8,6,0));
+  }
+  .online{
+    display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--ink-soft);
+    background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:20px; border:1px solid var(--line);
+  }
+  .online .dot{width:7px; height:7px; border-radius:50%; background:#5FBF6E; box-shadow:0 0 6px #5FBF6E;}
+  .top-links{ display:flex; align-items:center; gap:16px; font-size:0.85rem; font-weight:600;}
+  .top-links a{color:var(--ink-soft);}
+  .top-links a:hover{color:var(--gold);}
+  .heart-btn{
+    background:rgba(226,166,59,0.14); border:1px solid rgba(226,166,59,0.4); color:var(--gold);
+    padding:7px 13px; border-radius:20px; cursor:pointer; font-size:0.85rem; font-weight:700;
+  }
+
+  /* ---- HERO ---- */
+  .hero{
+    position:relative; min-height:100svh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:100px 20px 160px;
+    background-size:cover; background-position:center 65%;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(18,8,6,0.55) 0%, rgba(18,8,6,0.55) 40%, rgba(18,8,6,0.96) 100%);
+  }
+  .hero-content{ position:relative; z-index:2; max-width:640px; }
+  .kicker{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--gold); opacity:0.85; margin-bottom:18px; display:inline-block;
+  }
+  h1.brand-title{ font-size:clamp(2.6rem,7vw,4.2rem); line-height:1.1; margin-bottom:14px; }
+  .hero p.tagline{ color:var(--ink-soft); font-size:1.02rem; max-width:48ch; margin:0 auto 30px; }
+
+  .quick-icons{ display:flex; gap:22px; justify-content:center; flex-wrap:wrap; }
+  .qi-btn{
+    display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none;
+    color:var(--ink-soft); cursor:pointer; font-size:0.78rem; font-weight:600;
+  }
+  .qi-circle{
+    width:52px; height:52px; border-radius:50%; background:rgba(251,248,241,0.06);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; transition:.2s;
+  }
+  .qi-btn:hover .qi-circle{ background:rgba(226,166,59,0.16); border-color:var(--gold); }
+
+  /* ---- BOTTOM PLAYER BAR ---- */
+  .player-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    background:rgba(18,8,6,0.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    display:flex; align-items:center; gap:14px;
+    padding:12px 18px;
+  }
+  .pb-btn{
+    width:46px; height:46px; border-radius:50%; background:var(--gold); color:var(--bg);
+    border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .pb-btn svg{ width:20px; height:20px; }
+  .pb-meta{ flex:1; min-width:0; }
+  .pb-title{ font-size:0.9rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pb-sub{ font-size:0.74rem; color:var(--ink-soft); }
+  .pb-next, .pb-stop{
+    background:none; border:1px solid var(--line); color:var(--ink-soft); border-radius:6px;
+    padding:8px 12px; font-size:0.78rem; cursor:pointer; flex-shrink:0;
+  }
+  .pb-next:hover, .pb-stop:hover{ border-color:var(--gold); color:var(--gold); }
+
+  /* ---- SECTIONS ---- */
+  section{ padding:64px 0; position:relative; z-index:1; }
+  .section-head{ text-align:center; margin-bottom:34px; }
+  .section-head h2{ font-size:clamp(1.7rem,3.4vw,2.3rem); margin-bottom:8px;}
+  .section-head p{ color:var(--ink-soft); max-width:56ch; margin:0 auto; font-size:0.95rem;}
+
+  .about-text p{ color:var(--ink-soft); max-width:66ch; margin:0 auto 14px; text-align:center; }
+
+  /* ---- BHAJAN GRID ---- */
+  .bhajan-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:30px; }
+  @media (max-width:600px){ .bhajan-grid{grid-template-columns:1fr;} }
+  .bhajan-card{
+    display:flex; align-items:center; gap:14px; background:var(--panel);
+    border:1px solid var(--line); border-radius:10px; padding:16px; cursor:pointer;
+    transition:.18s;
+  }
+  .bhajan-card:hover{ border-color:var(--gold); background:#2C1A0C; }
+  .bhajan-card.active{ border-color:var(--gold); background:#33200F; }
+  .bc-play{
+    width:38px; height:38px; border-radius:50%; background:rgba(226,166,59,0.15); color:var(--gold);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1px solid rgba(226,166,59,0.4);
+  }
+  .bc-play svg{ width:15px; height:15px; }
+  .bc-name{ font-weight:700; font-size:0.95rem; }
+  .bc-singer{ font-size:0.78rem; color:var(--ink-soft); }
+
+  .yt-holder{ position:fixed; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; bottom:0; right:0;}
+
+  /* ---- FAQ ---- */
+  .faq-item{ border-bottom:1px solid var(--line); padding:16px 0; cursor:pointer; }
+  .faq-q{ display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:0.98rem; }
+  .faq-q .plus{ color:var(--gold); font-size:1.2rem; transition:.2s; }
+  .faq-item.open .plus{ transform:rotate(45deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition:.25s ease; color:var(--ink-soft); font-size:0.9rem; }
+  .faq-item.open .faq-a{ max-height:200px; padding-top:10px; }
+
+  /* ---- PHOTO STRIP ---- */
+  .photo-credit{ text-align:center; font-size:0.72rem; color:var(--ink-soft); margin-top:8px; }
+  .night-shot{ border-radius:12px; overflow:hidden; border:1px solid var(--line); margin-top:24px; }
+  .night-shot img{ width:100%; display:block; }
+
+  footer{ padding:40px 0 130px; border-top:1px solid var(--line); text-align:center; }
+  footer p{ font-size:0.8rem; color:var(--ink-soft); max-width:60ch; margin:0 auto 10px; }
+  footer a{ color:var(--gold); font-weight:600; }
+
+  /* ---- MODAL ---- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:90;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; max-width:420px; width:100%;
+    padding:26px; position:relative;
+  }
+  .modal h3{ margin-bottom:10px; }
+  .modal p{ color:var(--ink-soft); font-size:0.9rem; margin-bottom:10px; }
+  .modal-close{
+    position:absolute; top:12px; right:14px; background:none; border:none; color:var(--ink-soft);
+    font-size:1.3rem; cursor:pointer;
+  }
+  .fact-highlight{ background:rgba(226,166,59,0.1); border:1px solid rgba(226,166,59,0.3); border-radius:8px; padding:14px; margin-top:12px; font-size:0.88rem; }
+
+  @media (prefers-reduced-motion: reduce){ *{transition-duration:0.001ms !important;} }
+</style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav id="sb">
-  <div class="logo">Drive<em>Beats</em></div>
-  <div class="nav">
-    <div class="ni on" onclick="showView('home',this)">
-      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home
-    </div>
-    <div class="ni" onclick="showView('liked',this)">
-      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Liked Songs
-    </div>
-  </div>
-  <div class="divider"></div>
-  <div class="lib-label">Library</div>
-  <div class="lib" id="lib"></div>
-</nav>
-
-<!-- MAIN -->
-<main id="main">
-  <div class="top-bar">
-    <div class="top-left">
-      <h1 id="vtitle">All Songs</h1>
-      <div class="search-wrap">
-        <svg width="18" height="18" fill="var(--muted)" viewBox="0 0 24 24"><path d="M21 20l-4.35-4.35A7.92 7.92 0 0018 10c0-4.42-3.58-8-8-8S2 5.58 2 10s3.58 8 8 8a7.92 7.92 0 005.65-2.35L20 21l1-1zM10 16a6 6 0 110-12 6 6 0 010 12z"/></svg>
-        <input class="search" type="search" placeholder="Search songs..." oninput="setSearch(this.value)" aria-label="Search songs" />
-      </div>
-    </div>
-    <button class="rbtn" id="rbtn" onclick="loadSongs()">
-      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-      Refresh
-    </button>
-  </div>
-  <div id="content"></div>
-</main>
-
-<!-- PLAYER -->
-<div id="player">
-  <div class="pinfo">
-    <img class="pthumb" id="pimg" src="" alt="" onerror="this.style.display='none';document.getElementById('ptfb').style.display='flex'"/>
-    <div class="ptfb" id="ptfb">
-      <svg width="20" height="20" fill="var(--muted)" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
-    </div>
-    <div class="pmeta">
-      <div class="ptitle" id="ptitle">No track selected</div>
-      <div class="partist" id="partist">—</div>
-    </div>
-    <button class="hbtn" id="hbtn" onclick="toggleLike()">
-      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    </button>
-  </div>
-
-  <div class="pctrl">
-    <div class="cbtns">
-      <button class="cbtn" id="shbtn" onclick="toggleShuffle()" title="Shuffle">
-        <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
-      </button>
-      <button class="cbtn" onclick="playPrev()">
-        <svg width="21" height="21" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-      </button>
-      <button class="ppbtn" id="ppbtn" onclick="togglePlay()">
-        <svg id="ppico" width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <button class="cbtn" onclick="playNext()">
-        <svg width="21" height="21" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
-      </button>
-      <button class="cbtn on" id="rpbtn" onclick="toggleRepeat()" title="Repeat">
-        <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
-      </button>
-    </div>
-    <div class="prog">
-      <span class="tl" id="tcur">0:00</span>
-      <div class="bar" id="bar" onclick="seek(event)"></div>
-      <span class="tl r" id="tdur">0:00</span>
-    </div>
-  </div>
-
-  <div class="pright">
-    <div class="vwrap">
-      <button class="cbtn" onclick="toggleMute()">
-        <svg id="vico" width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-      </button>
-      <input type="range" class="vslider" id="vsl" min="0" max="100" value="80" oninput="setVol(this.value)"/>
-    </div>
+<div class="topbar">
+  <div class="online mono"><span class="dot"></span><span id="onlineCount">312</span> online</div>
+  <div class="top-links">
+    <a href="#about">परिचय</a>
+    <a href="#faq">FAQ</a>
+    <button class="heart-btn" onclick="openModal('supportModal')">❤ Support</button>
   </div>
 </div>
 
-<div id="toast"></div>
-<audio id="aud"></audio>
+<section class="hero" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Mukti_Dham_Mukam_Temple.jpg');">
+  <div class="hero-content">
+    <span class="kicker">बिश्नोई समाज · मुकाम, बीकानेर</span>
+    <h1 class="brand-title">मुक्ति धाम मुकाम</h1>
+    <p class="tagline">Bishnoi bhajan radio — Guru Jambheshwar bhajans, sakhis and aartis, streaming free, all day, from the sacred desert shrine at Mukam.</p>
+    <div class="quick-icons">
+      <button class="qi-btn" onclick="openModal('factModal')">
+        <span class="qi-circle">🪔</span> आज का तथ्य
+      </button>
+      <button class="qi-btn" onclick="document.getElementById('bhajans').scrollIntoView({behavior:'smooth'})">
+        <span class="qi-circle">🎵</span> भजन सुनें
+      </button>
+      <button class="qi-btn" onclick="openModal('supportModal')">
+        <span class="qi-circle">🦌</span> दर्शन जानकारी
+      </button>
+    </div>
+  </div>
+</section>
 
-<script src="app.js"></script>
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">परिचय</span>
+      <h2>A shrine born from a Samadhi</h2>
+    </div>
+    <div class="about-text">
+      <p>Mukti Dham Mukam is the holiest pilgrimage site of the Bishnoi community — a white-marble temple near Mukam village in Bikaner district, Rajasthan, built over the samadhi of Guru Jambheshwar Bhagwan, who founded the Bishnoi Panth and its 29 principles in 1485 at nearby Samrathal Dhora.</p>
+      <p>Set among sand dunes and khejri groves, the temple grounds are home to deer, blackbuck and peacocks that roam freely — a living reminder of the community's founding vow to protect all living beings.</p>
+    </div>
+    <div class="night-shot">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mukti_Dham_Mukam_Bishnoi_Temple_at_night..jpg" alt="Mukti Dham Mukam temple lit up at night">
+    </div>
+    <p class="photo-credit">Photos: Kaushal Bishnoi / Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener" style="color:var(--gold);">CC BY-SA 4.0</a></p>
+  </div>
+</section>
+
+<section id="bhajans">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">भजन</span>
+      <h2>Bishnoi Bhajans</h2>
+      <p>Tap any bhajan to start listening. Audio streams in the background — keep browsing while it plays.</p>
+    </div>
+
+    <div class="bhajan-grid" id="bhajanGrid">
+      <div class="bhajan-card" data-id="Fok4CiKAxGo" data-name="जय जाम्भोजी" data-singer="Baludas Vaishnav">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div><div class="bc-name">जय जाम्भोजी</div><div class="bc-singer">Baludas Vaishnav</div></div>
+      </div>
+      <div class="bhajan-card" data-id="DdDrfjpbs8w" data-name="धीमो भाई सा धीमो" data-singer="Pankaj Bishnoi">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div><div class="bc-name">धीमो भाई सा धीमो</div><div class="bc-singer">Pankaj Bishnoi</div></div>
+      </div>
+      <div class="bhajan-card" data-id="Wcn0wo7gNns" data-name="टॉप 5 भजन" data-singer="Champalal Karir">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div><div class="bc-name">टॉप 5 भजन</div><div class="bc-singer">Champalal Karir</div></div>
+      </div>
+      <div class="bhajan-card" data-id="naW-nzCuzy8" data-name="ऐसा खेल रचाया" data-singer="Sachidanand Maharaj">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div><div class="bc-name">ऐसा खेल रचाया</div><div class="bc-singer">Sachidanand Maharaj</div></div>
+      </div>
+      <div class="bhajan-card" data-id="Xmq1yREzWyM" data-name="जम्बेश्वर भगवान दर्शन दो" data-singer="Bishnoi Bhajan 2022">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div><div class="bc-name">जम्बेश्वर भगवान दर्शन दो</div><div class="bc-singer">Bishnoi Bhajan</div></div>
+      </div>
+      <div class="bhajan-card" data-id="Fok4CiKAxGo" data-name="Shuffle All" data-singer="रैंडम भजन" data-shuffle="true">
+        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3l4 4-4 4M3 7h6l3 3M21 17l-4 4-4-4M3 17h6l7-7"/></svg></div>
+        <div><div class="bc-name">Shuffle All</div><div class="bc-singer">रैंडम भजन</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">FAQ</span>
+      <h2>अक्सर पूछे जाने वाले सवाल</h2>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">मुक्ति धाम मुकाम क्या है? <span class="plus">+</span></div>
+      <div class="faq-a">यह बिश्नोई समाज का सबसे पवित्र स्थल है, गुरु जाम्भोजी की समाधि पर बना संगमरमर का मंदिर, बीकानेर के मुकाम गाँव में।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">यहाँ कौन से भजन बजते हैं? <span class="plus">+</span></div>
+      <div class="faq-a">गुरु जम्भेश्वर भगवान से जुड़े पारंपरिक भजन, साखी और आरती — YouTube के embedded player के ज़रिए यहाँ चलाए जाते हैं।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">मुकाम कैसे पहुँचें? <span class="plus">+</span></div>
+      <div class="faq-a">निकटतम रेलवे स्टेशन बीकानेर है, जो मुकाम से लगभग 80 किमी दूर है। मुकाम सड़क मार्ग से अच्छी तरह जुड़ा है।</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">मेले कब लगते हैं? <span class="plus">+</span></div>
+      <div class="faq-a">साल में दो बड़े मेले — फाल्गुन अमावस्या और आसोज अमावस्या — जब हज़ारों श्रद्धालु दर्शन के लिए आते हैं।</div>
+    </div>
+  </div>
+</section>
+
+<div class="yt-holder"><iframe id="ytFrame" width="1" height="1" src="" allow="autoplay; encrypted-media" frameborder="0"></iframe></div>
+
+<div class="player-bar">
+  <button class="pb-btn" id="pbBtn" onclick="togglePlay()">
+    <svg id="pbPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pbStopIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 6h12v12H6z"/></svg>
+  </button>
+  <div class="pb-meta">
+    <div class="pb-title" id="pbTitle">कोई भजन चुनें</div>
+    <div class="pb-sub" id="pbSub">Tap a bhajan above to begin</div>
+  </div>
+  <button class="pb-next" onclick="playRandom()">🔀 Shuffle</button>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>यह एक अनौपचारिक जानकारी और भक्ति भाव से बनी वेबसाइट है — मंदिर ट्रस्ट से इसका कोई आधिकारिक संबंध नहीं है। यात्रा से पहले कृपया आधिकारिक जानकारी अवश्य जाँच लें।</p>
+    <p>Audio plays through YouTube's embedded player. Nothing is hosted on this site — all rights remain with the original creators.</p>
+    <p>Sources: Wikipedia · Wikimedia Commons · BhaktiBharat.com</p>
+  </div>
+</footer>
+
+<!-- FACT MODAL -->
+<div class="modal-overlay" id="factModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('factModal')">×</button>
+    <h3>🪔 आज का तथ्य</h3>
+    <p id="factText">लोड हो रहा है...</p>
+  </div>
+</div>
+
+<!-- SUPPORT / VISIT MODAL -->
+<div class="modal-overlay" id="supportModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('supportModal')">×</button>
+    <h3>🦌 दर्शन जानकारी</h3>
+    <p>मुक्ति धाम मुकाम, नोखा तहसील, बीकानेर ज़िला, राजस्थान — बीकानेर से लगभग 80 किमी।</p>
+    <div class="fact-highlight">दान या भेंट के लिए कृपया मंदिर ट्रस्ट के आधिकारिक माध्यम से ही संपर्क करें। यह वेबसाइट कोई भुगतान एकत्र नहीं करती।</div>
+  </div>
+</div>
+
+<script>
+  // fake gentle online counter fluctuation
+  const onlineEl = document.getElementById('onlineCount');
+  setInterval(()=>{
+    let v = parseInt(onlineEl.textContent) + (Math.floor(Math.random()*7)-3);
+    if(v < 120) v = 120;
+    onlineEl.textContent = v;
+  }, 4000);
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.addEventListener('click', ()=> item.classList.toggle('open'));
+  });
+
+  // Modals
+  function openModal(id){ document.getElementById(id).classList.add('show'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+  document.querySelectorAll('.modal-overlay').forEach(ov=>{
+    ov.addEventListener('click', e=>{ if(e.target === ov) ov.classList.remove('show'); });
+  });
+
+  const facts = [
+    "गुरु जाम्भोजी ने 1485 में सम्रथल धोरा पर बिश्नोई पंथ की स्थापना की थी।",
+    "मुक्ति धाम मुकाम मंदिर पूरी तरह सफ़ेद संगमरमर से बना है।",
+    "यहाँ हिरण और काले हिरण (blackbuck) निडर होकर घूमते हैं — बिश्नोई समाज की वन्यजीव सुरक्षा की परंपरा का प्रतीक।",
+    "मंदिर परिसर में खेजड़ी के पेड़ पवित्र माने जाते हैं और कभी नहीं काटे जाते।",
+    "साल में दो बड़े मेले लगते हैं — फाल्गुन अमावस्या और आसोज अमावस्या।",
+    "गुरुजी ने अपने अनुयायियों को 29 नियम दिए, इसीलिए समाज का नाम 'बिश्नोई' (20+9) पड़ा।"
+  ];
+  document.getElementById('factText').textContent = facts[Math.floor(Math.random()*facts.length)];
+
+  // Bhajan playback via direct iframe src swap (no external JS API dependency)
+  const ytFrame = document.getElementById('ytFrame');
+  const pbTitle = document.getElementById('pbTitle');
+  const pbSub = document.getElementById('pbSub');
+  const pbPlayIcon = document.getElementById('pbPlayIcon');
+  const pbStopIcon = document.getElementById('pbStopIcon');
+  const cards = document.querySelectorAll('.bhajan-card');
+  let currentId = null;
+  let isPlaying = false;
+
+  function playTrack(id, name, singer, cardEl){
+    currentId = id;
+    ytFrame.src = `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`;
+    pbTitle.textContent = name;
+    pbSub.textContent = singer;
+    isPlaying = true;
+    pbPlayIcon.style.display = 'none';
+    pbStopIcon.style.display = 'block';
+    cards.forEach(c => c.classList.remove('active'));
+    if(cardEl) cardEl.classList.add('active');
+  }
+
+  cards.forEach(card=>{
+    card.addEventListener('click', ()=>{
+      if(card.dataset.shuffle === 'true'){ playRandom(); return; }
+      playTrack(card.dataset.id, card.dataset.name, card.dataset.singer, card);
+    });
+  });
+
+  function playRandom(){
+    const pool = Array.from(cards).filter(c => c.dataset.shuffle !== 'true');
+    const pick = pool[Math.floor(Math.random()*pool.length)];
+    playTrack(pick.dataset.id, pick.dataset.name, pick.dataset.singer, pick);
+  }
+
+  function togglePlay(){
+    if(!currentId){ playRandom(); return; }
+    if(isPlaying){
+      ytFrame.src = '';
+      isPlaying = false;
+      pbPlayIcon.style.display = 'block';
+      pbStopIcon.style.display = 'none';
+      pbSub.textContent = 'रुका हुआ · Paused';
+    } else {
+      ytFrame.src = `https://www.youtube.com/embed/${currentId}?autoplay=1&playsinline=1`;
+      isPlaying = true;
+      pbPlayIcon.style.display = 'none';
+      pbStopIcon.style.display = 'block';
+    }
+  }
+</script>
+
 </body>
 </html>
