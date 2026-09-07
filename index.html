@@ -95,11 +95,15 @@
   .pb-meta{ flex:1; min-width:0; }
   .pb-title{ font-size:0.9rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .pb-sub{ font-size:0.74rem; color:var(--ink-soft); }
-  .pb-next, .pb-stop{
+  .pb-progress{ width:100%; height:4px; accent-color:var(--gold); cursor:pointer; display:block; margin-top:5px; }
+  .pb-controls{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .pb-control{
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
     background:none; border:1px solid var(--line); color:var(--ink-soft); border-radius:6px;
-    padding:8px 12px; font-size:0.78rem; cursor:pointer; flex-shrink:0;
+    cursor:pointer; flex-shrink:0;
   }
-  .pb-next:hover, .pb-stop:hover{ border-color:var(--gold); color:var(--gold); }
+  .pb-control:hover, .pb-control:focus-visible{ border-color:var(--gold); color:var(--gold); outline:none; }
+  .pb-control svg{ width:17px; height:17px; }
 
   /* ---- SECTIONS ---- */
   section{ padding:64px 0; position:relative; z-index:1; }
@@ -117,7 +121,7 @@
     border:1px solid var(--line); border-radius:10px; padding:16px; cursor:pointer;
     transition:.18s;
   }
-  .bhajan-card:hover{ border-color:var(--gold); background:#2C1A0C; }
+  .bhajan-card:hover, .bhajan-card.active{ border-color:var(--gold); background:#2C1A0C; }
   .bhajan-card.active{ border-color:var(--gold); background:#33200F; }
   .bc-play{
     width:38px; height:38px; border-radius:50%; background:rgba(226,166,59,0.15); color:var(--gold);
@@ -128,6 +132,15 @@
   .bc-singer{ font-size:0.78rem; color:var(--ink-soft); }
 
   .yt-holder{ position:fixed; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; bottom:0; right:0;}
+
+  @media (max-width:600px){
+    .player-bar{ gap:9px; padding:10px 12px; }
+    .pb-controls{ gap:5px; }
+    .pb-control{ width:34px; height:34px; }
+    .pb-btn{ width:42px; height:42px; }
+    .pb-title{ font-size:0.82rem; }
+    .pb-sub{ font-size:0.68rem; }
+  }
 
   /* ---- FAQ ---- */
   .faq-item{ border-bottom:1px solid var(--line); padding:16px 0; cursor:pointer; }
@@ -219,37 +232,36 @@
     <div class="section-head">
       <span class="kicker">भजन</span>
       <h2>Bishnoi Bhajans</h2>
-      <p>Tap any bhajan to start listening. Audio streams in the background — keep browsing while it plays.</p>
+      <p>JBB Official की सभी playlists यहीं सुनें।</p>
     </div>
 
     <div class="bhajan-grid" id="bhajanGrid">
-      <div class="bhajan-card" data-id="Fok4CiKAxGo" data-name="जय जाम्भोजी" data-singer="Baludas Vaishnav">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div><div class="bc-name">जय जाम्भोजी</div><div class="bc-singer">Baludas Vaishnav</div></div>
-      </div>
-      <div class="bhajan-card" data-id="DdDrfjpbs8w" data-name="धीमो भाई सा धीमो" data-singer="Pankaj Bishnoi">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div><div class="bc-name">धीमो भाई सा धीमो</div><div class="bc-singer">Pankaj Bishnoi</div></div>
-      </div>
-      <div class="bhajan-card" data-id="Wcn0wo7gNns" data-name="टॉप 5 भजन" data-singer="Champalal Karir">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div><div class="bc-name">टॉप 5 भजन</div><div class="bc-singer">Champalal Karir</div></div>
-      </div>
-      <div class="bhajan-card" data-id="naW-nzCuzy8" data-name="ऐसा खेल रचाया" data-singer="Sachidanand Maharaj">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div><div class="bc-name">ऐसा खेल रचाया</div><div class="bc-singer">Sachidanand Maharaj</div></div>
-      </div>
-      <div class="bhajan-card" data-id="Xmq1yREzWyM" data-name="जम्बेश्वर भगवान दर्शन दो" data-singer="Bishnoi Bhajan 2022">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        <div><div class="bc-name">जम्बेश्वर भगवान दर्शन दो</div><div class="bc-singer">Bishnoi Bhajan</div></div>
-      </div>
-      <div class="bhajan-card" data-id="Fok4CiKAxGo" data-name="Shuffle All" data-singer="रैंडम भजन" data-shuffle="true">
-        <div class="bc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3l4 4-4 4M3 7h6l3 3M21 17l-4 4-4-4M3 17h6l7-7"/></svg></div>
-        <div><div class="bc-name">Shuffle All</div><div class="bc-singer">रैंडम भजन</div></div>
-      </div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEuc8Q4NjP-8YfY6bJ3UcPRpn"><div class="bc-play">▶</div><div><div class="bc-name">Sant Rajkumar</div><div class="bc-singer">JBB Official playlist</div></div></div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEueyI9F_-SBOX82afZQ-pU_0"><div class="bc-play">▶</div><div><div class="bc-name">Bishnoi Popular Song</div><div class="bc-singer">JBB Official playlist</div></div></div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEueRb5PIBi_kVjfJaDOOehmq"><div class="bc-play">▶</div><div><div class="bc-name">Jambheshwar Non Stop Bhajan</div><div class="bc-singer">JBB Official playlist</div></div></div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEudxDRi0KThTafJJubZSjrKz"><div class="bc-play">▶</div><div><div class="bc-name">जाम्भेश्वर भजन</div><div class="bc-singer">JBB Official playlist</div></div></div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEuc2Zw3WEV3FDEq6TA6SRHrO"><div class="bc-play">▶</div><div><div class="bc-name">Bishnoi Song</div><div class="bc-singer">JBB Official playlist</div></div></div>
+      <div class="bhajan-card" data-playlist="PLB5G7aWonEucP5u1OpamcQbAv1nqt1snr"><div class="bc-play">▶</div><div><div class="bc-name">Bishnoi Song Collection</div><div class="bc-singer">JBB Official playlist</div></div></div>
     </div>
   </div>
 </section>
+
+<div class="yt-holder"><div id="ytFrame"></div></div>
+
+<div class="player-bar" aria-label="Bhajan player controls">
+  <button class="pb-btn" id="pbBtn" onclick="togglePlay()" aria-label="Play or pause">
+    <svg id="pbPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pbStopIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 6h12v12H6z"/></svg>
+  </button>
+  <div class="pb-meta"><div class="pb-title" id="pbTitle">कोई playlist चुनें</div><div class="pb-sub" id="pbSub">ऊपर से playlist चुनकर play करें</div><input class="pb-progress" id="pbProgress" type="range" min="0" max="100" value="0" aria-label="Playback position"></div>
+  <div class="pb-controls">
+    <button class="pb-control" onclick="rewindTrack()" aria-label="Rewind 10 seconds" title="Rewind 10 seconds">↶</button>
+    <button class="pb-control" onclick="previousTrack()" aria-label="Previous song" title="Previous song">⏮</button>
+    <button class="pb-control" onclick="nextTrack()" aria-label="Next song" title="Next song">⏭</button>
+    <button class="pb-control" onclick="forwardTrack()" aria-label="Forward 10 seconds" title="Forward 10 seconds">↷</button>
+    <button class="pb-control" onclick="shuffleTrack()" aria-label="Shuffle playlist" title="Shuffle playlist">🔀</button>
+  </div>
+</div>
 
 <section id="faq">
   <div class="wrap">
@@ -263,7 +275,7 @@
     </div>
     <div class="faq-item">
       <div class="faq-q">यहाँ कौन से भजन बजते हैं? <span class="plus">+</span></div>
-      <div class="faq-a">गुरु जम्भेश्वर भगवान से जुड़े पारंपरिक भजन, साखी और आरती — YouTube के embedded player के ज़रिए यहाँ चलाए जाते हैं।</div>
+      <div class="faq-a">गुरु जम्भेश्वर भगवान से जुड़े पारंपरिक भजन, साखी और आरती JBB Official की playlists में उपलब्ध हैं और इसी player में चलती हैं।</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">मुकाम कैसे पहुँचें? <span class="plus">+</span></div>
@@ -276,24 +288,10 @@
   </div>
 </section>
 
-<div class="yt-holder"><iframe id="ytFrame" width="1" height="1" src="" allow="autoplay; encrypted-media" frameborder="0"></iframe></div>
-
-<div class="player-bar">
-  <button class="pb-btn" id="pbBtn" onclick="togglePlay()">
-    <svg id="pbPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-    <svg id="pbStopIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 6h12v12H6z"/></svg>
-  </button>
-  <div class="pb-meta">
-    <div class="pb-title" id="pbTitle">कोई भजन चुनें</div>
-    <div class="pb-sub" id="pbSub">Tap a bhajan above to begin</div>
-  </div>
-  <button class="pb-next" onclick="playRandom()">🔀 Shuffle</button>
-</div>
-
 <footer>
   <div class="wrap">
     <p>यह एक अनौपचारिक जानकारी और भक्ति भाव से बनी वेबसाइट है — मंदिर ट्रस्ट से इसका कोई आधिकारिक संबंध नहीं है। यात्रा से पहले कृपया आधिकारिक जानकारी अवश्य जाँच लें।</p>
-    <p>Audio plays through YouTube's embedded player. Nothing is hosted on this site — all rights remain with the original creators.</p>
+    <p>भजन JBB Official की YouTube playlists से इसी player में चलते हैं। इस साइट पर कोई audio host नहीं किया जाता — सभी अधिकार मूल creators के पास हैं।</p>
     <p>Sources: Wikipedia · Wikimedia Commons · BhaktiBharat.com</p>
   </div>
 </footer>
@@ -317,6 +315,7 @@
   </div>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
   // fake gentle online counter fluctuation
   const onlineEl = document.getElementById('onlineCount');
@@ -348,56 +347,77 @@
   ];
   document.getElementById('factText').textContent = facts[Math.floor(Math.random()*facts.length)];
 
-  // Bhajan playback via direct iframe src swap (no external JS API dependency)
-  const ytFrame = document.getElementById('ytFrame');
+  const playlistCards = document.querySelectorAll('.bhajan-card');
   const pbTitle = document.getElementById('pbTitle');
   const pbSub = document.getElementById('pbSub');
+  const pbProgress = document.getElementById('pbProgress');
   const pbPlayIcon = document.getElementById('pbPlayIcon');
   const pbStopIcon = document.getElementById('pbStopIcon');
-  const cards = document.querySelectorAll('.bhajan-card');
-  let currentId = null;
-  let isPlaying = false;
+  let youtubePlayer = null;
+  let activePlaylist = '';
+  let progressTimer = null;
 
-  function playTrack(id, name, singer, cardEl){
-    currentId = id;
-    ytFrame.src = `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`;
-    pbTitle.textContent = name;
-    pbSub.textContent = singer;
-    isPlaying = true;
-    pbPlayIcon.style.display = 'none';
-    pbStopIcon.style.display = 'block';
-    cards.forEach(c => c.classList.remove('active'));
-    if(cardEl) cardEl.classList.add('active');
-  }
-
-  cards.forEach(card=>{
-    card.addEventListener('click', ()=>{
-      if(card.dataset.shuffle === 'true'){ playRandom(); return; }
-      playTrack(card.dataset.id, card.dataset.name, card.dataset.singer, card);
+  function onYouTubeIframeAPIReady(){
+    youtubePlayer = new YT.Player('ytFrame', {
+      width:'1', height:'1',
+      playerVars:{ playsinline:1, controls:0, rel:0 },
+      events:{ onReady:onPlayerReady, onStateChange:onPlayerStateChange }
     });
-  });
-
-  function playRandom(){
-    const pool = Array.from(cards).filter(c => c.dataset.shuffle !== 'true');
-    const pick = pool[Math.floor(Math.random()*pool.length)];
-    playTrack(pick.dataset.id, pick.dataset.name, pick.dataset.singer, pick);
   }
 
-  function togglePlay(){
-    if(!currentId){ playRandom(); return; }
-    if(isPlaying){
-      ytFrame.src = '';
-      isPlaying = false;
-      pbPlayIcon.style.display = 'block';
-      pbStopIcon.style.display = 'none';
-      pbSub.textContent = 'रुका हुआ · Paused';
-    } else {
-      ytFrame.src = `https://www.youtube.com/embed/${currentId}?autoplay=1&playsinline=1`;
-      isPlaying = true;
+  function onPlayerReady(){
+    const firstCard = playlistCards[0];
+    if(firstCard) selectPlaylist(firstCard, false);
+  }
+
+  function onPlayerStateChange(event){
+    if(event.data === YT.PlayerState.PLAYING){
       pbPlayIcon.style.display = 'none';
       pbStopIcon.style.display = 'block';
+      clearInterval(progressTimer);
+      progressTimer = setInterval(updateProgress, 500);
+    } else if(event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED){
+      pbPlayIcon.style.display = 'block';
+      pbStopIcon.style.display = 'none';
+      clearInterval(progressTimer);
     }
   }
+
+  function selectPlaylist(card, shouldPlay=true){
+    if(!youtubePlayer || !youtubePlayer.loadPlaylist) return;
+    activePlaylist = card.dataset.playlist;
+    playlistCards.forEach(item=>item.classList.toggle('active', item === card));
+    pbTitle.textContent = card.querySelector('.bc-name').textContent;
+    pbSub.textContent = 'JBB Official · playlist';
+    youtubePlayer.loadPlaylist({list:activePlaylist, index:0});
+    if(shouldPlay) youtubePlayer.playVideo();
+  }
+
+  playlistCards.forEach(card=>card.addEventListener('click', ()=>selectPlaylist(card)));
+
+  function togglePlay(){
+    if(!youtubePlayer) return;
+    if(youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) youtubePlayer.pauseVideo();
+    else youtubePlayer.playVideo();
+  }
+
+  function previousTrack(){ if(youtubePlayer) youtubePlayer.previousVideo(); }
+  function nextTrack(){ if(youtubePlayer) youtubePlayer.nextVideo(); }
+  function shuffleTrack(){
+    if(youtubePlayer){ youtubePlayer.setShuffle(true); youtubePlayer.nextVideo(); }
+  }
+  function rewindTrack(){
+    if(youtubePlayer) youtubePlayer.seekTo(Math.max(0, youtubePlayer.getCurrentTime()-10), true);
+  }
+  function forwardTrack(){
+    if(youtubePlayer) youtubePlayer.seekTo(Math.min(youtubePlayer.getDuration(), youtubePlayer.getCurrentTime()+10), true);
+  }
+  function updateProgress(){
+    if(youtubePlayer && youtubePlayer.getDuration) pbProgress.value = youtubePlayer.getDuration() ? (youtubePlayer.getCurrentTime()/youtubePlayer.getDuration())*100 : 0;
+  }
+  pbProgress.addEventListener('input', ()=>{
+    if(youtubePlayer && youtubePlayer.getDuration) youtubePlayer.seekTo((pbProgress.value/100)*youtubePlayer.getDuration(), true);
+  });
 </script>
 
 </body>
